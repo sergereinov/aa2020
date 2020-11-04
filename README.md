@@ -5,6 +5,6 @@
 
 Related links:
  - [habr](https://habr.com/ru/news/t/522972/)
- - [youtube](https://www.youtube.com/channel/UCmkVThwbjthEg2RR4iuDQWA)
+ - [youtube playlist](https://www.youtube.com/playlist?list=PLjLCGE4bVpHCJvtGpEVl-4IYGHB1A8FCc)
  - Android Academy Msk: https://t.me/AndroidAcademyMsk
  
