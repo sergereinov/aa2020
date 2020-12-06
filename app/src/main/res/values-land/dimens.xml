@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="movies_list_columns">3</integer>
+    <dimen name="actor_card_width">160dp</dimen>
+    <dimen name="actor_card_height">190dp</dimen>
+</resources>
