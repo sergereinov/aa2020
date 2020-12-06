@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
+import com.github.sergereinov.aa2020.data.models.Actor
 
 class FragmentMoviesDetails : Fragment() {
 
@@ -24,6 +26,11 @@ class FragmentMoviesDetails : Fragment() {
         view.findViewById<TextView>(R.id.back)?.setOnClickListener {
             listener?.backFromMovieDetails()
         }
+
+        val adapter = ActorsListAdapter()
+        view.findViewById<RecyclerView>(R.id.actors_list)?.adapter = adapter
+
+        adapter.submitList(actorList)
     }
 
     override fun onAttach(context: Context) {
@@ -38,5 +45,30 @@ class FragmentMoviesDetails : Fragment() {
 
     interface FragmentClicks {
         fun backFromMovieDetails()
+    }
+
+    companion object {
+        private val actorList = listOf(
+                Actor(
+                        id = 1,
+                        imageId = R.drawable.actor1,
+                        name = "Robert Downey Jr."
+                ),
+                Actor(
+                        id = 2,
+                        imageId = R.drawable.actor2,
+                        name = "Chris Evans"
+                ),
+                Actor(
+                        id = 3,
+                        imageId = R.drawable.actor3,
+                        name = "Mark Ruffalo"
+                ),
+                Actor(
+                        id = 4,
+                        imageId = R.drawable.actor4,
+                        name = "Chris Hemsworth"
+                )
+        )
     }
 }
