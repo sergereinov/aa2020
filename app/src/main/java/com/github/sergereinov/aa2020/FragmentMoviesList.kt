@@ -25,10 +25,9 @@ class FragmentMoviesList : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val movieClickListener = MoviesListAdapter.ClickListener { _ ->
-            listener?.filmCard()
+        val adapter = MoviesListAdapter { movie ->
+            listener?.filmCard(movie.id)
         }
-        val adapter = MoviesListAdapter(movieClickListener)
         val recyclerView = view.findViewById<RecyclerView>(R.id.movies_list)
         recyclerView.adapter = adapter
 
@@ -46,7 +45,7 @@ class FragmentMoviesList : Fragment() {
     }
 
     interface FragmentClicks {
-        fun filmCard()
+        fun filmCard(movieId: Int)
     }
 
     companion object {

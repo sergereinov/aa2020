@@ -9,15 +9,16 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.github.sergereinov.aa2020.data.models.Actor
+import com.github.sergereinov.aa2020.domain.MovieDetailsDataSource
 
 class FragmentMoviesDetails : Fragment() {
 
     private var listener: FragmentClicks? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_movies_details, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -28,9 +29,22 @@ class FragmentMoviesDetails : Fragment() {
         }
 
         val adapter = ActorsListAdapter()
-        view.findViewById<RecyclerView>(R.id.actors_list)?.adapter = adapter
+        val actorsView = view.findViewById<RecyclerView>(R.id.actors_list)
+        actorsView?.adapter = adapter
 
-        adapter.submitList(actorList)
+        val movieId = arguments?.getInt(PARAM_MOVIE_ID, 0)
+        MovieDetailsDataSource.getDetails(movieId)?.let {
+
+            //fill details
+
+            if (it.actors.isNotEmpty()) {
+                adapter.submitList(it.actors)
+
+                view.findViewById<View>(R.id.no_actors).visibility = View.GONE
+                actorsView.visibility = View.VISIBLE
+            }
+        }
+
     }
 
     override fun onAttach(context: Context) {
@@ -48,27 +62,14 @@ class FragmentMoviesDetails : Fragment() {
     }
 
     companion object {
-        private val actorList = listOf(
-                Actor(
-                        id = 1,
-                        imageId = R.drawable.actor1,
-                        name = "Robert Downey Jr."
-                ),
-                Actor(
-                        id = 2,
-                        imageId = R.drawable.actor2,
-                        name = "Chris Evans"
-                ),
-                Actor(
-                        id = 3,
-                        imageId = R.drawable.actor3,
-                        name = "Mark Ruffalo"
-                ),
-                Actor(
-                        id = 4,
-                        imageId = R.drawable.actor4,
-                        name = "Chris Hemsworth"
-                )
-        )
+        private const val PARAM_MOVIE_ID = "movie_id"
+
+        fun newInstance(movieId: Int) = FragmentMoviesDetails().also {
+            val args = Bundle()
+            args.putInt(PARAM_MOVIE_ID, movieId)
+            it.arguments = args
+        }
+
     }
+
 }

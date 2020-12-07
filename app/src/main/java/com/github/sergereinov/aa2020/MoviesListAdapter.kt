@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.sergereinov.aa2020.data.models.Movie
 import java.util.*
 
-class MoviesListAdapter(private val clickListener: ClickListener)
+class MoviesListAdapter(private val onClickCard: (item: Movie) -> Unit)
     : ListAdapter<Movie, MoviesListAdapter.ViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -26,7 +26,7 @@ class MoviesListAdapter(private val clickListener: ClickListener)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(clickListener, item)
+        holder.bind(item, onClickCard)
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -47,7 +47,7 @@ class MoviesListAdapter(private val clickListener: ClickListener)
         private val titleText: TextView = itemView.findViewById(R.id.title_text)
         private val movieLenText: TextView = itemView.findViewById(R.id.movie_len)
 
-        fun bind(clickListener: ClickListener, item: Movie) {
+        fun bind(item: Movie, onClickCard: (item: Movie) -> Unit) {
             movieImage.setImageResource(item.movieImageId)
 
             pgText.text = item.pg
@@ -73,13 +73,9 @@ class MoviesListAdapter(private val clickListener: ClickListener)
             }
 
             filmCard.setOnClickListener {
-                clickListener.onClick(item)
+                onClickCard(item)
             }
         }
-    }
-
-    class ClickListener(val clickListener: (item: Movie?) -> Unit) {
-        fun onClick(item: Movie) = clickListener(item)
     }
 
     class DiffCallback : DiffUtil.ItemCallback<Movie>() {
