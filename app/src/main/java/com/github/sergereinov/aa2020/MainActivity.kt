@@ -17,10 +17,10 @@ class MainActivity : AppCompatActivity(), FragmentMoviesDetails.FragmentClicks, 
         }
     }
 
-    private fun showMovieDetailsFragment() {
+    private fun showMovieDetailsFragment(movieId: Int) {
         supportFragmentManager.beginTransaction()
             .apply {
-                add(R.id.fragments_container, FragmentMoviesDetails())
+                add(R.id.fragments_container, FragmentMoviesDetails.newInstance(movieId))
                 addToBackStack(null)
                 commit()
             }
@@ -32,8 +32,8 @@ class MainActivity : AppCompatActivity(), FragmentMoviesDetails.FragmentClicks, 
         }
     }
 
-    override fun filmCard() {
-        showMovieDetailsFragment()
+    override fun filmCard(movieId: Int) {
+        showMovieDetailsFragment(movieId)
     }
 
 }

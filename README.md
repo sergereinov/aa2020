@@ -4,16 +4,35 @@
 [Related links](#related-links)
 <br/>
 
-## Homework #3: UI Components
- - Фрагменты и макет movies_list
+## Homework #4: Lists
+ - RecyclerView и адаптеры
+
+<details>
+  <summary>Список фильмов в окне дизайнера</summary>
+
+  ![in_design_view](/doc/movies_list_layout_in_design_view.gif)
+</details>
+
+<details>
+  <summary>Вид в эмуляторе</summary>
+  
+  ![hw4](/doc/aa2020_hw4.gif)
+</details>
+
 
 <br/>
 
 
 ## Предыдущие задания
 
-* Homework #1: Default Project Setup - Создать пустой проект https://github.com/sergereinov/aa2020/tree/1-homework
-* Homework #2: View & ViewGroups - Макет movie_details https://github.com/sergereinov/aa2020/tree/2-homework
+Homework #1: Default Project Setup 
+* Создать пустой проект https://github.com/sergereinov/aa2020/tree/1-homework
+
+Homework #2: View & ViewGroups
+* Макет movie_details https://github.com/sergereinov/aa2020/tree/2-homework
+
+Homework #3: UI Components
+* Фрагменты и макет movies_list https://github.com/sergereinov/aa2020/tree/3-homework
  
 
 ## Related links
