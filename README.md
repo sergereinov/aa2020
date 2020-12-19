@@ -4,19 +4,13 @@
 [Related links](#related-links)
 <br/>
 
-## Homework #4: Lists
- - RecyclerView и адаптеры
-
-<details>
-  <summary>Список фильмов в окне дизайнера</summary>
-
-  ![in_design_view](/doc/movies_list_layout_in_design_view.gif)
-</details>
+## Homework #5: Coroutines & Glide
+ - Многопоточность и загрузка картинок из интернета
 
 <details>
   <summary>Вид в эмуляторе</summary>
   
-  ![hw4](/doc/aa2020_hw4.gif)
+  ![hw5](/doc/aa2020_hw5.gif)
 </details>
 
 
@@ -34,6 +28,8 @@ Homework #2: View & ViewGroups
 Homework #3: UI Components
 * Фрагменты и макет movies_list https://github.com/sergereinov/aa2020/tree/3-homework
  
+Homework #4: Lists
+* RecyclerView и адаптеры https://github.com/sergereinov/aa2020/tree/4-homework
 
 ## Related links
  - [habr](https://habr.com/ru/news/t/522972/)
