@@ -51,6 +51,7 @@
             app:layout_constraintGuide_end="16dp" />
 
         <TextView
+            android:id="@+id/pg_text"
             style="@style/text_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -126,6 +127,7 @@
             app:tint="@color/blank_star" />
 
         <TextView
+            android:id="@+id/text_movie_reviews"
             style="@style/text_movie_reviews"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
