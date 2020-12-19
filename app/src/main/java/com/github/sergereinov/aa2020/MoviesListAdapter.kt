@@ -48,17 +48,18 @@ class MoviesListAdapter(private val onClickCard: (item: Movie) -> Unit)
         private val movieLenText: TextView = itemView.findViewById(R.id.movie_len)
 
         fun bind(item: Movie, onClickCard: (item: Movie) -> Unit) {
-            Glide.with(itemView.context)
+            val context = itemView.context
+            Glide.with(context)
                 .load(item.poster)
                 .placeholder(R.mipmap.ic_banner_loading)
                 .fitCenter()
                 .into(movieImage)
 
-            pgText.text = "%d+".format(item.minimumAge)
+            pgText.text = context.getString(R.string.pg_text).format(item.minimumAge)
             tagText.text = item.genres.joinToString(", ") { it.name }
-            reviewsText.text = "%d Reviews".format(item.numberOfRatings)
+            reviewsText.text = context.getString(R.string.reviews_text).format(item.numberOfRatings)
             titleText.text = item.title
-            movieLenText.text = "%d MIN".format(item.runtime)
+            movieLenText.text = context.getString(R.string.movie_len_text).format(item.runtime)
 
             //set ImageView tint for fave icon
             //thx2: https://stackoverflow.com/questions/20121938/how-to-set-tint-for-an-image-view-programmatically-in-android/45571812#45571812

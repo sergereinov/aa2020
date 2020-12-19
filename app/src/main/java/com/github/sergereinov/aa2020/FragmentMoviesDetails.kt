@@ -61,10 +61,10 @@ class FragmentMoviesDetails : Fragment() {
                 .fitCenter()
                 .into(backdropImage)
 
-            pgText.text = "%d+".format(it.minimumAge)
+            pgText.text = requireContext().getString(R.string.pg_text).format(it.minimumAge)
             titleText.text = it.title
             tagText.text = it.genres.joinToString(", ") { it.name }
-            reviewsText.text = "%d Reviews".format(it.numberOfRatings)
+            reviewsText.text = requireContext().getString(R.string.reviews_text).format(it.numberOfRatings)
             storylineText.text = it.overview
 
             val starsCount = kotlin.math.floor(it.ratings / 2).toInt()

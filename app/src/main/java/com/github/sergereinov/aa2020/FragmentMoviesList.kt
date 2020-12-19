@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.github.sergereinov.aa2020.data.loadMovies
 import com.github.sergereinov.aa2020.domain.MovieDataSource
 import kotlinx.coroutines.*
 
@@ -32,7 +33,7 @@ class FragmentMoviesList : Fragment() {
         recyclerView.adapter = adapter
 
         uiScope.launch {
-            MovieDataSource.loadMovies(requireContext())
+            MovieDataSource.setMovies(withContext(Dispatchers.IO) { loadMovies(requireContext()) })
             adapter.submitList(MovieDataSource.getMovies())
         }
     }
@@ -47,7 +48,6 @@ class FragmentMoviesList : Fragment() {
         listener = null
         uiScope.coroutineContext.cancelChildren()
     }
-
 
     interface FragmentClicks {
         fun filmCard(movieId: Int)
