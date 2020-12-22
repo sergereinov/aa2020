@@ -2,5 +2,5 @@
 <resources>
     <integer name="movies_list_columns">3</integer>
     <dimen name="actor_card_width">160dp</dimen>
-    <dimen name="actor_card_height">190dp</dimen>
+    <dimen name="actor_card_height">262dp</dimen>
 </resources>

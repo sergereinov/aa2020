@@ -11,8 +11,8 @@ import androidx.core.widget.ImageViewCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.github.sergereinov.aa2020.data.models.Movie
-import java.util.*
+import com.bumptech.glide.Glide
+import com.github.sergereinov.aa2020.data.Movie
 
 class MoviesListAdapter(private val onClickCard: (item: Movie) -> Unit)
     : ListAdapter<Movie, MoviesListAdapter.ViewHolder>(DiffCallback()) {
@@ -34,7 +34,7 @@ class MoviesListAdapter(private val onClickCard: (item: Movie) -> Unit)
         private val filmCard: View = itemView.findViewById(R.id.film_card)
         private val movieImage: ImageView = itemView.findViewById(R.id.movie_image)
         private val pgText: TextView = itemView.findViewById(R.id.pg)
-        private val likeImage: ImageView = itemView.findViewById(R.id.like_image)
+        //private val likeImage: ImageView = itemView.findViewById(R.id.like_image)
         private val tagText: TextView = itemView.findViewById(R.id.tag_text)
         private val starsImages: List<ImageView> = listOf(
                 itemView.findViewById(R.id.star1_image),
@@ -48,25 +48,31 @@ class MoviesListAdapter(private val onClickCard: (item: Movie) -> Unit)
         private val movieLenText: TextView = itemView.findViewById(R.id.movie_len)
 
         fun bind(item: Movie, onClickCard: (item: Movie) -> Unit) {
-            movieImage.setImageResource(item.movieImageId)
+            val context = itemView.context
+            Glide.with(context)
+                .load(item.poster)
+                .placeholder(R.mipmap.ic_banner_loading)
+                .fitCenter()
+                .into(movieImage)
 
-            pgText.text = item.pg
-            tagText.text = item.tags
-            reviewsText.text = item.reviews.toUpperCase(Locale.ROOT)
+            pgText.text = context.getString(R.string.pg_text).format(item.minimumAge)
+            tagText.text = item.genres.joinToString(", ") { it.name }
+            reviewsText.text = context.getString(R.string.reviews_text).format(item.numberOfRatings)
             titleText.text = item.title
-            movieLenText.text = item.movieLen.toUpperCase(Locale.ROOT)
+            movieLenText.text = context.getString(R.string.movie_len_text).format(item.runtime)
 
-            //set ImageView tint
+            //set ImageView tint for fave icon
             //thx2: https://stackoverflow.com/questions/20121938/how-to-set-tint-for-an-image-view-programmatically-in-android/45571812#45571812
-            if (item.isLiked) {
-                ImageViewCompat.setImageTintList(likeImage, ColorStateList.valueOf(
-                        ContextCompat.getColor(likeImage.context, R.color.red_star)
-                ))
-            }
+//            if (item.isLiked) {
+//                ImageViewCompat.setImageTintList(likeImage, ColorStateList.valueOf(
+//                        ContextCompat.getColor(likeImage.context, R.color.red_star)
+//                ))
+//            }
 
             //set stars tint
+            val starsCount = kotlin.math.floor(item.ratings / 2).toInt()
             starsImages.forEachIndexed { index, imageView ->
-                val colorId = if (item.starsCount > index) R.color.red_star else R.color.blank_star
+                val colorId = if (starsCount > index) R.color.red_star else R.color.blank_star
                 ImageViewCompat.setImageTintList(imageView, ColorStateList.valueOf(
                         ContextCompat.getColor(imageView.context, colorId)
                 ))

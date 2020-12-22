@@ -5,15 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.github.sergereinov.aa2020.data.models.Movie
-import java.util.*
+import com.github.sergereinov.aa2020.data.loadMovies
+import com.github.sergereinov.aa2020.domain.MovieDataSource
+import kotlinx.coroutines.*
 
 class FragmentMoviesList : Fragment() {
 
     private var listener: FragmentClicks? = null
+    private val uiScope = CoroutineScope(Dispatchers.Main + Job())
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -31,7 +32,10 @@ class FragmentMoviesList : Fragment() {
         val recyclerView = view.findViewById<RecyclerView>(R.id.movies_list)
         recyclerView.adapter = adapter
 
-        adapter.submitList(moviesList)
+        uiScope.launch {
+            MovieDataSource.setMovies(withContext(Dispatchers.IO) { loadMovies(requireContext()) })
+            adapter.submitList(MovieDataSource.getMovies())
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -42,58 +46,10 @@ class FragmentMoviesList : Fragment() {
     override fun onDetach() {
         super.onDetach()
         listener = null
+        uiScope.coroutineContext.cancelChildren()
     }
 
     interface FragmentClicks {
         fun filmCard(movieId: Int)
-    }
-
-    companion object {
-        private val moviesList = listOf(
-                Movie(
-                        id = 1,
-                        movieImageId = R.drawable.movie,
-                        pg = "13+",
-                        isLiked = false,
-                        tags = "Action, Adventure, Drama",
-                        starsCount = 4,
-                        reviews = "125 Reviews",
-                        title = "Avengers: End Game",
-                        movieLen = "137 min"
-                ),
-                Movie(
-                        id = 2,
-                        movieImageId = R.drawable.movie2,
-                        pg = "16+",
-                        isLiked = true,
-                        tags = "Action, Sci-Fi, Thriller",
-                        starsCount = 5,
-                        reviews = "98 Reviews",
-                        title = "Tenet",
-                        movieLen = "97 min"
-                ),
-                Movie(
-                        id = 3,
-                        movieImageId = R.drawable.movie3,
-                        pg = "13+",
-                        isLiked = false,
-                        tags = "Action, Adventure, Sci-Fi",
-                        starsCount = 4,
-                        reviews = "38 Reviews",
-                        title = "Black Widow",
-                        movieLen = "102 min"
-                ),
-                Movie(
-                        id = 4,
-                        movieImageId = R.drawable.movie4,
-                        pg = "13+",
-                        isLiked = false,
-                        tags = "Action, Adventure, Fantasy",
-                        starsCount = 5,
-                        reviews = "74 Reviews",
-                        title = "Wonder Woman 1984",
-                        movieLen = "120 min"
-                )
-        )
     }
 }

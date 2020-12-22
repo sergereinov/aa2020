@@ -8,7 +8,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.github.sergereinov.aa2020.data.models.Actor
+import com.bumptech.glide.Glide
+import com.github.sergereinov.aa2020.data.Actor
 
 class ActorsListAdapter : ListAdapter<Actor, ActorsListAdapter.ViewHolder>(DiffCallback())  {
 
@@ -24,14 +25,18 @@ class ActorsListAdapter : ListAdapter<Actor, ActorsListAdapter.ViewHolder>(DiffC
         holder.bind(item)
     }
 
-
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val actorImage: ImageView = itemView.findViewById(R.id.actor_image)
         private val actorName: TextView = itemView.findViewById(R.id.actor_name)
 
         fun bind(item: Actor) {
-            actorImage.setImageResource(item.imageId)
+            Glide.with(itemView.context)
+                .load(item.picture)
+                .placeholder(R.mipmap.ic_banner_loading)
+                .fitCenter()
+                .into(actorImage)
+
             actorName.text = item.name
         }
     }
