@@ -4,18 +4,10 @@
 [Related links](#related-links)
 <br/>
 
-## Homework #5: Coroutines & Glide
- - Многопоточность и загрузка картинок из интернета
-
-<details>
-  <summary>Вид в эмуляторе</summary>
-  
-  ![hw5](/doc/aa2020_hw5.gif)
-</details>
-
+## Homework #6: UI architectures
+ - MVVM
 
 <br/>
-
 
 ## Предыдущие задания
 
@@ -31,6 +23,9 @@ Homework #3: UI Components
 Homework #4: Lists
 * RecyclerView и адаптеры https://github.com/sergereinov/aa2020/tree/4-homework
 
+Homework #5: Coroutines & Glide
+* Многопоточность и загрузка картинок из интернета https://github.com/sergereinov/aa2020/tree/5-homework
+ 
 ## Related links
  - [habr](https://habr.com/ru/news/t/522972/)
  - [youtube playlist](https://www.youtube.com/playlist?list=PLjLCGE4bVpHCJvtGpEVl-4IYGHB1A8FCc)
