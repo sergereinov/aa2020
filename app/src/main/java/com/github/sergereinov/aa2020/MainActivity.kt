@@ -3,7 +3,9 @@ package com.github.sergereinov.aa2020
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
-class MainActivity : AppCompatActivity(), FragmentMoviesDetails.FragmentClicks, FragmentMoviesList.FragmentClicks {
+class MainActivity : AppCompatActivity(), MovieDetailsFragment.FragmentClicks,
+    MoviesListFragment.FragmentClicks {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -11,7 +13,7 @@ class MainActivity : AppCompatActivity(), FragmentMoviesDetails.FragmentClicks, 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .apply {
-                    add(R.id.fragments_container, FragmentMoviesList())
+                    add(R.id.fragments_container, MoviesListFragment())
                     commit()
                 }
         }
@@ -20,7 +22,7 @@ class MainActivity : AppCompatActivity(), FragmentMoviesDetails.FragmentClicks, 
     private fun showMovieDetailsFragment(movieId: Int) {
         supportFragmentManager.beginTransaction()
             .apply {
-                add(R.id.fragments_container, FragmentMoviesDetails.newInstance(movieId))
+                add(R.id.fragments_container, MovieDetailsFragment.newInstance(movieId))
                 addToBackStack(null)
                 commit()
             }
