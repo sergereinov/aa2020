@@ -16,10 +16,10 @@
             android:layout_height="0dp"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            android:src="@drawable/orig"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/orig" />
 
         <TextView
             android:id="@+id/back"
@@ -56,29 +56,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="@string/rating"
             app:layout_constraintBottom_toBottomOf="@id/title_image"
-            app:layout_constraintStart_toStartOf="@id/leftGuide" />
+            app:layout_constraintStart_toStartOf="@id/leftGuide"
+            tools:text="@string/rating" />
 
         <TextView
             android:id="@+id/title_text"
             style="@style/text_movie_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/avengers_end_game"
             app:layout_constraintEnd_toStartOf="@id/rightGuide"
             app:layout_constraintStart_toStartOf="@id/leftGuide"
-            app:layout_constraintTop_toBottomOf="@id/title_image" />
+            app:layout_constraintTop_toBottomOf="@id/title_image"
+            tools:text="@string/avengers_end_game" />
 
         <TextView
             android:id="@+id/tag_text"
             style="@style/text_movie_tag"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/action_adventure_fantasy"
             app:layout_constraintEnd_toStartOf="@id/rightGuide"
             app:layout_constraintStart_toStartOf="@id/leftGuide"
-            app:layout_constraintTop_toBottomOf="@id/title_text" />
+            app:layout_constraintTop_toBottomOf="@id/title_text"
+            tools:text="@string/action_adventure_fantasy" />
 
         <ImageView
             android:id="@+id/star1_image"
@@ -133,10 +133,10 @@
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
             android:gravity="center_vertical"
-            android:text="@string/_125_reviews"
             app:layout_constraintBottom_toBottomOf="@id/star5_image"
             app:layout_constraintStart_toEndOf="@id/star5_image"
-            app:layout_constraintTop_toTopOf="@id/star5_image" />
+            app:layout_constraintTop_toTopOf="@id/star5_image"
+            tools:text="@string/_125_reviews" />
 
         <TextView
             android:id="@+id/storyline_title"
@@ -157,10 +157,10 @@
             android:alpha="0.75"
             android:paddingTop="12dp"
             android:paddingBottom="8dp"
-            android:text="@string/after_the_devastating"
             app:layout_constraintEnd_toStartOf="@id/rightGuide"
             app:layout_constraintStart_toStartOf="@id/leftGuide"
-            app:layout_constraintTop_toBottomOf="@id/storyline_title" />
+            app:layout_constraintTop_toBottomOf="@id/storyline_title"
+            tools:text="@string/after_the_devastating" />
 
         <TextView
             android:id="@+id/cast_title"
