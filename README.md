@@ -27,7 +27,7 @@ Homework #5: Coroutines & Glide
 * Многопоточность и загрузка картинок из интернета https://github.com/sergereinov/aa2020/tree/5-homework
 
 Homework #6: UI architectures
-* MVVM
+* MVVM  https://github.com/sergereinov/aa2020/tree/6-homework
  
 ## Related links
  - [habr](https://habr.com/ru/news/t/522972/)
