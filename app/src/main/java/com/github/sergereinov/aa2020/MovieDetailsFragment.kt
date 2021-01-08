@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
@@ -15,7 +16,6 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.github.sergereinov.aa2020.domain.MoviesInteractor
-import com.github.sergereinov.aa2020.domain.MoviesLoader
 
 class MovieDetailsFragment : Fragment() {
 
@@ -23,8 +23,7 @@ class MovieDetailsFragment : Fragment() {
         MovieDetailsViewModelFactory(
             arguments?.getInt(PARAM_MOVIE_ID, 0) ?: 0,
             MoviesInteractor(
-                MoviesLoader(requireActivity().applicationContext),
-                (requireActivity().application as MoviesApplication).appContainer.dataSource
+                (requireActivity().application as MoviesApplication).networkModule
             )
         )
     }
@@ -62,8 +61,7 @@ class MovieDetailsFragment : Fragment() {
             view.findViewById(R.id.star5_image)
         )
 
-        //viewModel.refresh()
-        viewModel.movie.observe(viewLifecycleOwner, {
+        viewModel.dataMovie.observe(viewLifecycleOwner, { it ->
             it?.let { movie ->
 
                 //fill details
@@ -71,17 +69,18 @@ class MovieDetailsFragment : Fragment() {
                 Glide.with(requireContext())
                     .load(movie.backdrop)
                     .placeholder(R.mipmap.ic_banner_loading)
+                    .error(R.drawable.ic_no_image)
                     .fitCenter()
                     .into(backdropImage)
 
                 pgText.text = requireContext().getString(R.string.pg_text).format(movie.minimumAge)
                 titleText.text = movie.title
-                tagText.text = movie.genres.joinToString(", ") { it.name }
+                tagText.text = movie.genres.joinToString(", ") { g -> g.name }
                 reviewsText.text =
-                    requireContext().getString(R.string.reviews_text).format(movie.numberOfRatings)
+                    requireContext().getString(R.string.reviews_text).format(movie.voteCount)
                 storylineText.text = movie.overview
 
-                val starsCount = kotlin.math.floor(movie.ratings / 2).toInt()
+                val starsCount = kotlin.math.floor(movie.voteAverage / 2).toInt()
                 starsImages.forEachIndexed { index, imageView ->
                     val colorId = if (starsCount > index) R.color.red_star else R.color.blank_star
                     ImageViewCompat.setImageTintList(
@@ -100,6 +99,16 @@ class MovieDetailsFragment : Fragment() {
             }
         })
 
+        viewModel.errorLoadingDetails.observe(viewLifecycleOwner, { error ->
+            error?.let {
+                Toast.makeText(
+                    context,
+                    "Error loading movie details: %s".format(it),
+                    Toast.LENGTH_SHORT
+                ).show()
+                viewModel.doneWithErrorLoadingDetails()
+            }
+        })
     }
 
     override fun onAttach(context: Context) {

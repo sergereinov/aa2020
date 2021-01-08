@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.github.sergereinov.aa2020.data.Actor
+import com.github.sergereinov.aa2020.domain.Actor
 
 class ActorsListAdapter : ListAdapter<Actor, ActorsListAdapter.ViewHolder>(DiffCallback())  {
 
@@ -34,6 +34,7 @@ class ActorsListAdapter : ListAdapter<Actor, ActorsListAdapter.ViewHolder>(DiffC
             Glide.with(itemView.context)
                 .load(item.picture)
                 .placeholder(R.mipmap.ic_banner_loading)
+                .error(R.drawable.ic_no_image)
                 .fitCenter()
                 .into(actorImage)
 

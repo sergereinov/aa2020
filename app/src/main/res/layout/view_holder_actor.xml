@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/actor_card_width"
     android:layout_height="@dimen/actor_card_height"
-    android:layout_marginEnd="2dp">
+    android:layout_marginEnd="2dp"
+    tools:background="@color/black">
 
     <ImageView
         android:id="@+id/actor_image"
@@ -14,6 +15,7 @@
         android:layout_marginEnd="4dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
+        app:layout_constraintBottom_toTopOf="@id/actor_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -23,11 +25,13 @@
         android:id="@+id/actor_name"
         style="@style/text_actor_name"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginTop="2dp"
         android:layout_marginEnd="4dp"
+        android:gravity="top"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/actor_image"
         app:layout_constraintStart_toStartOf="@id/actor_image"
-        app:layout_constraintTop_toBottomOf="@id/actor_image"
         tools:text="@string/robert_downey_jr" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

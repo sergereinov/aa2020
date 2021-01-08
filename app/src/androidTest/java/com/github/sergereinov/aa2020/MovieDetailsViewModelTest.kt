@@ -1,7 +1,8 @@
 package com.github.sergereinov.aa2020
 
-import com.github.sergereinov.aa2020.data.Movie
 import com.github.sergereinov.aa2020.domain.IMoviesInteractor
+import com.github.sergereinov.aa2020.domain.Movie
+import com.github.sergereinov.aa2020.domain.MovieDetails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -13,51 +14,46 @@ class MovieDetailsViewModelTest {
     @Test
     fun testMoviesInteractorCalls() {
 
-        var refreshCounter = 0
-        var getMoviesCounter = 0
-        var getMovieCounter = 0
+        var loadMoviesCounter: Int = 0
+        var loadMovieDetails: Int = 0
 
-        val movie1 = Movie(
+        val movie1 = MovieDetails(
             id = 1,
             title = "title",
             overview = "overview",
-            poster = "poster",
-            backdrop = "backdrop",
-            ratings = 0.0f,
-            numberOfRatings = 0,
             minimumAge = 0,
-            runtime = 0,
             genres = listOf(),
+            backdrop = "backdrop",
+            voteAverage = 0.0,
+            voteCount = 0,
             actors = listOf()
         )
 
         val mi = object : IMoviesInteractor {
-            override suspend fun refresh() {
-                withContext(Dispatchers.Main) { refreshCounter++ }
+            override suspend fun loadMovies(): List<Movie> {
+                return withContext(Dispatchers.Main) {
+                    loadMoviesCounter++
+                    listOf()
+                }
             }
-
-            override fun getMovies(): List<Movie>? {
-                getMoviesCounter++
-                return listOf()
-            }
-
-            override fun getMovie(movieId: Int?): Movie? {
-                getMovieCounter++
-                return if (refreshCounter == 0) null else movie1.copy()
+            override suspend fun loadMovieDetails(movieId: Int): MovieDetails {
+                return withContext(Dispatchers.Main) {
+                    loadMovieDetails++
+                    movie1
+                }
             }
         }
 
         val vm = MovieDetailsViewModel(0, mi)
 
         //wait LiveData
-        val selectedMovie = runBlocking(Dispatchers.Main) { vm.movie.getOrAwaitValue() }
+        val selectedMovie = runBlocking(Dispatchers.Main) { vm.dataMovie.getOrAwaitValue() }
 
         //check movie
         assertEquals("selectedMovie", movie1, selectedMovie)
 
         //check counters
-        assertEquals("refreshCounter", 1, refreshCounter)
-        assertEquals("getMoviesCounter", 0, getMoviesCounter)
-        assertEquals("getMovieCounter", 2, getMovieCounter)
+        assertEquals("loadMoviesCounter", 0, loadMoviesCounter)
+        assertEquals("loadMovieDetails", 1, loadMovieDetails)
     }
 }
