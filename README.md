@@ -6,6 +6,8 @@
 
 ## Homework #7: Network
  - Retrofit, OkHttp
+ 
+ ![hw7_list](/doc/aa2020_hw7_list.jpg) ![hw7_details](/doc/aa2020_hw7_details.jpg)
 
 <br/>
 
