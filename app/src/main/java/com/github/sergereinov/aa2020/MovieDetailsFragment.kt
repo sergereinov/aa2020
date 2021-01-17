@@ -61,8 +61,8 @@ class MovieDetailsFragment : Fragment() {
             view.findViewById(R.id.star5_image)
         )
 
-        viewModel.dataMovie.observe(viewLifecycleOwner, { it ->
-            it?.let { movie ->
+        viewModel.dataMovie.observe(viewLifecycleOwner, { dataMovie ->
+            dataMovie?.let { movie ->
 
                 //fill details
 

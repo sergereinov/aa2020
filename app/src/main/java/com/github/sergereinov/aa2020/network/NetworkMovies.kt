@@ -3,42 +3,32 @@ package com.github.sergereinov.aa2020.network
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+/*
+    Query: GET /movie/popular
+    Schema: https://developers.themoviedb.org/3/movies/get-popular-movies
+    data class NetworkMovies
+ */
+
 @Serializable
 data class NetworkMovies(
+    @SerialName("results")
     val results: List<NetworkMovieItem>,
-
-// *** skip unused fields ***
-//	val page: Int,
-//	@SerialName("total_pages")
-//	val totalPages: Int,
-//	@SerialName("total_results")
-//	val totalResults: Int
 )
 
 @Serializable
 data class NetworkMovieItem(
+    @SerialName("id")
     val id: Int,
+    @SerialName("adult")
     val adult: Boolean,
+    @SerialName("title")
     val title: String,
-
     @SerialName("genre_ids")
     val genreIds: List<Int>,
-
     @SerialName("poster_path")
     val posterPath: String?,
-
     @SerialName("vote_average")
     val voteAverage: Double,
-
     @SerialName("vote_count")
     val voteCount: Int,
-
-// *** skip unused fields ***
-//	val overview: String,
-//	val originalLanguage: String,
-//	val originalTitle: String,
-//	val video: Boolean,
-//	val backdropPath: String,
-//	val releaseDate: String,
-//	val popularity: Double,
 )

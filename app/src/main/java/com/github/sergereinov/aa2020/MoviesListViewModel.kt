@@ -13,12 +13,6 @@ class MoviesListViewModel(
     private val moviesInteractor: IMoviesInteractor
 ) : ViewModel() {
 
-    private val uiScope = CoroutineScope(Job() + Dispatchers.Main)
-    override fun onCleared() {
-        super.onCleared()
-        uiScope.cancel()
-    }
-
     private val _errorLoadingMovies = MutableLiveData<String>()
     val errorLoadingMovies: LiveData<String> get() = _errorLoadingMovies
     fun doneWithErrorLoadingMovies() {
@@ -29,7 +23,7 @@ class MoviesListViewModel(
     val movies: LiveData<List<Movie>> get() = _movies
 
     init {
-        uiScope.launch {
+        viewModelScope.launch {
             try {
                 _movies.value = moviesInteractor.loadMovies()
             } catch (e: Exception) {
