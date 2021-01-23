@@ -4,8 +4,10 @@
 [Related links](#related-links)
 <br/>
 
-## Homework #6: UI architectures
- - MVVM
+## Homework #7: Network
+ - Retrofit, OkHttp
+ 
+ ![hw7_list](/doc/aa2020_hw7_list.jpg) ![hw7_details](/doc/aa2020_hw7_details.jpg)
 
 <br/>
 
@@ -25,6 +27,9 @@ Homework #4: Lists
 
 Homework #5: Coroutines & Glide
 * Многопоточность и загрузка картинок из интернета https://github.com/sergereinov/aa2020/tree/5-homework
+
+Homework #6: UI architectures
+* MVVM  https://github.com/sergereinov/aa2020/tree/6-homework
  
 ## Related links
  - [habr](https://habr.com/ru/news/t/522972/)

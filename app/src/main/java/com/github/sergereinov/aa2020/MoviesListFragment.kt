@@ -5,19 +5,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.github.sergereinov.aa2020.domain.MoviesInteractor
-import com.github.sergereinov.aa2020.domain.MoviesLoader
 
 class MoviesListFragment : Fragment() {
 
     private val viewModel: MoviesListViewModel by viewModels {
         MoviesListViewModelFactory(
             MoviesInteractor(
-                MoviesLoader(requireActivity().applicationContext),
-                (requireActivity().application as MoviesApplication).appContainer.dataSource
+                (requireActivity().application as MoviesApplication).networkModule
             )
         )
     }
@@ -40,6 +39,17 @@ class MoviesListFragment : Fragment() {
 
         viewModel.movies.observe(viewLifecycleOwner, {
             adapter.submitList(it)
+        })
+
+        viewModel.errorLoadingMovies.observe(viewLifecycleOwner, { error ->
+            error?.let {
+                Toast.makeText(
+                    context,
+                    getString(R.string.error_loading_movies).format(it),
+                    Toast.LENGTH_SHORT
+                ).show()
+                viewModel.doneWithErrorLoadingMovies()
+            }
         })
     }
 
