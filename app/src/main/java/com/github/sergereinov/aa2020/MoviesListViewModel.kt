@@ -25,6 +25,7 @@ class MoviesListViewModel(
     init {
         viewModelScope.launch {
             try {
+                _movies.value = moviesInteractor.getCachedMovies()
                 _movies.value = moviesInteractor.loadMovies()
             } catch (e: Exception) {
                 _errorLoadingMovies.value = e.localizedMessage ?: e.message ?: e.toString()

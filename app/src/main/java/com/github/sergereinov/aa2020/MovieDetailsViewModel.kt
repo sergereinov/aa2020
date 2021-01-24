@@ -26,6 +26,7 @@ class MovieDetailsViewModel(
     init {
         viewModelScope.launch {
             try {
+                _movie.value = moviesInteractor.getCachedDetails(movieId)
                 _movie.value = moviesInteractor.loadMovieDetails(movieId)
             } catch (e: Exception) {
                 _errorLoadingDetails.value = e.localizedMessage ?: e.message ?: e.toString()

@@ -16,7 +16,8 @@ class MoviesListFragment : Fragment() {
     private val viewModel: MoviesListViewModel by viewModels {
         MoviesListViewModelFactory(
             MoviesInteractor(
-                (requireActivity().application as MoviesApplication).networkModule
+                (requireActivity().application as MoviesApplication).networkModule,
+                (requireActivity().application as MoviesApplication).database
             )
         )
     }
