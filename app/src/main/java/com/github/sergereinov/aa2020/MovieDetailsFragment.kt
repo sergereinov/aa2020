@@ -23,7 +23,8 @@ class MovieDetailsFragment : Fragment() {
         MovieDetailsViewModelFactory(
             arguments?.getInt(PARAM_MOVIE_ID, 0) ?: 0,
             MoviesInteractor(
-                (requireActivity().application as MoviesApplication).networkModule
+                (requireActivity().application as MoviesApplication).networkModule,
+                (requireActivity().application as MoviesApplication).database
             )
         )
     }

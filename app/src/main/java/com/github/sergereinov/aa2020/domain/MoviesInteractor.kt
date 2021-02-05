@@ -1,69 +1,169 @@
 package com.github.sergereinov.aa2020.domain
 
+import com.github.sergereinov.aa2020.database.*
 import com.github.sergereinov.aa2020.network.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class MoviesInteractor(
-    private val networkInteractor: INetworkInteractor
+    private val networkInteractor: INetworkInteractor,
+    database: MovieDatabase,
 ) : IMoviesInteractor {
+
+    private val movieDao = database.movieDao
+
+    override suspend fun getCachedMovies(): List<Movie> = withContext(Dispatchers.IO) {
+        val dbMovies = movieDao.getMoviesWithGenres()
+        dbMovies.toDomainMovies()
+    }
+
+    override suspend fun getCachedDetails(movieId: Int): MovieDetails =
+        withContext(Dispatchers.IO) {
+            val dbMovie = movieDao.getMovieWithGenresAndActors(movieId.toLong())
+            dbMovie.toDomainMovieDetails()
+        }
 
     override suspend fun loadMovies(): List<Movie> {
         val netGenres = networkInteractor.loadGenres()
         val netMovies = networkInteractor.loadPopularMovies()
 
-        val genresMap = netGenres.genres.toGenres().map { it.id to it }.toMap()
+        val dbMoviesAndGenres = buildDatabaseMoviesAndGenres(netMovies, netGenres)
 
-        return netMovies.toMovies(genresMap)
+        withContext(Dispatchers.IO) {
+            movieDao.replaceMoviesAndGenres(dbMoviesAndGenres.movies, dbMoviesAndGenres.genres)
+        }
+
+        return getCachedMovies()
     }
 
     override suspend fun loadMovieDetails(movieId: Int): MovieDetails {
         val netDetails = networkInteractor.loadMovieDetails(movieId)
         val netCredits = networkInteractor.loadMovieCredits(movieId)
 
-        return netDetails.toMovieDetails(netCredits)
+        val dbPartialAndActors = buildDatabasePartialAndActors(netDetails, netCredits)
+
+        withContext(Dispatchers.IO) {
+            movieDao.updateMovieDetailsAndActors(
+                dbPartialAndActors.partial,
+                dbPartialAndActors.actors
+            )
+        }
+
+        return getCachedDetails(movieId)
     }
 
     // *** helpers ******************************************************
 
-    private fun List<NetworkGenresItem>.toGenres(): List<Genre> = map {
-        Genre(it.id, it.name)
-    }
-
-    private fun Map<Int, Genre>.buildListByIDs(ids: List<Int>): List<Genre> = ids.mapNotNull { id ->
-        this[id]
-    }
-
-    private fun getMinimumAge(adult: Boolean) = if (adult) 16 else 13
-
-    private fun NetworkMovies.toMovies(genresMap: Map<Int, Genre>): List<Movie> = this.results.map {
-        Movie(
-            id = it.id,
-            title = it.title,
-            minimumAge = getMinimumAge(it.adult),
-            genres = genresMap.buildListByIDs(it.genreIds),
-            poster = Server.getPosterUrl(it.posterPath),
-            voteAverage = it.voteAverage,
-            voteCount = it.voteCount
+    private fun List<GenreEntity>.toDomainGenres(): List<Genre> = map {
+        Genre(
+            id = it.genreId.toInt(),
+            name = it.name
         )
     }
 
-    private fun NetworkMovieCredits.toActorsTopN(count: Int = 10): List<Actor> =
-        this.cast.take(count).map {
-            Actor(
-                it.id,
-                it.name,
-                Server.getActorPictureUrl(it.profilePath)
+    private fun List<ActorEntity>.toDomainActors(): List<Actor> = map {
+        Actor(
+            id = it.actorId,
+            name = it.name,
+            picture = it.picture
+        )
+    }
+
+    private fun List<MovieWithGenres>.toDomainMovies(): List<Movie> = map {
+        Movie(
+            id = it.movie.id.toInt(),
+            title = it.movie.title,
+            minimumAge = it.movie.minimumAge,
+            genres = it.genres.toDomainGenres(),
+            poster = it.movie.poster,
+            voteAverage = it.movie.voteAverage,
+            voteCount = it.movie.voteCount
+        )
+    }
+
+    private fun MovieWithGenresAndActors.toDomainMovieDetails() =
+        MovieDetails(
+            id = this.movie.id.toInt(),
+            title = this.movie.title,
+            overview = this.movie.overview,
+            minimumAge = this.movie.minimumAge,
+            genres = this.genres.toDomainGenres(),
+            backdrop = this.movie.backdrop,
+            voteAverage = this.movie.voteAverage,
+            voteCount = this.movie.voteCount,
+            actors = this.actors.toDomainActors()
+        )
+
+    private data class DatabaseMoviesAndGenres(
+        val movies: List<MovieEntity>,
+        val genres: List<GenreEntity>
+    )
+
+    private fun buildDatabaseMoviesAndGenres(
+        netMovies: NetworkMovies,
+        netGenres: NetworkGenres
+    ): DatabaseMoviesAndGenres {
+        val dbMovies = mutableListOf<MovieEntity>()
+        val dbGenres = mutableListOf<GenreEntity>()
+
+        val netGenresMap = netGenres.genres.map { it.id to it }.toMap()
+
+        netMovies.results.forEach { netMovie ->
+            dbMovies.add(
+                MovieEntity(
+                    id = netMovie.id.toLong(),
+                    title = netMovie.title,
+                    overview = null,
+                    minimumAge = getMinimumAge(netMovie.adult),
+                    backdrop = null,
+                    poster = Server.getPosterUrl(netMovie.posterPath),
+                    voteAverage = netMovie.voteAverage,
+                    voteCount = netMovie.voteCount
+                )
+            )
+
+            netMovie.genreIds
+                .mapNotNull { genreId -> netGenresMap[genreId] }
+                .forEach { netGenre ->
+                    dbGenres.add(
+                        GenreEntity(
+                            movieId = netMovie.id.toLong(),
+                            genreId = netGenre.id.toLong(),
+                            name = netGenre.name
+                        )
+                    )
+                }
+        }
+
+        return DatabaseMoviesAndGenres(dbMovies, dbGenres)
+    }
+
+    private data class DatabasePartialAndActors(
+        val partial: MoviePartialEntity,
+        val actors: List<ActorEntity>
+    )
+
+    private fun buildDatabasePartialAndActors(
+        netDetails: NetworkMovieDetails,
+        netCredits: NetworkMovieCredits
+    ): DatabasePartialAndActors {
+        val dbPartial = MoviePartialEntity(
+            movieId = netDetails.id.toLong(),
+            overview = netDetails.overview,
+            backdrop = Server.getBackdropUrl(netDetails.backdropPath)
+        )
+
+        val dbActors = netCredits.cast.take(10).map {
+            ActorEntity(
+                movieId = netDetails.id.toLong(),
+                actorId = it.id,
+                name = it.name,
+                picture = Server.getActorPictureUrl(it.profilePath)
             )
         }
 
-    private fun NetworkMovieDetails.toMovieDetails(credits: NetworkMovieCredits) = MovieDetails(
-        id = id,
-        title = title,
-        overview = overview,
-        minimumAge = getMinimumAge(adult),
-        genres = genres.toGenres(),
-        backdrop = Server.getBackdropUrl(backdropPath),
-        voteAverage = voteAverage,
-        voteCount = voteCount,
-        actors = credits.toActorsTopN(10),
-    )
+        return DatabasePartialAndActors(dbPartial, dbActors)
+    }
+
+    private fun getMinimumAge(adult: Boolean) = if (adult) 16 else 13
 }
