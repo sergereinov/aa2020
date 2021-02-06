@@ -2,6 +2,8 @@ package com.github.sergereinov.aa2020
 
 import com.github.sergereinov.aa2020.domain.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -10,30 +12,29 @@ class MoviesListViewModelTest {
     @Test
     fun testMoviesInteractorCalls() {
 
-        var loadMoviesCounter: Int = 0
-        var loadMovieDetails: Int = 0
+        var refreshMoviesCounter: Int = 0
+        var refreshMovieDetailsCounter: Int = 0
 
         val mi = object : IMoviesInteractor {
-            override suspend fun loadMovies(): List<Movie> {
-                return withContext(Dispatchers.Main) {
-                    loadMoviesCounter++
-                    listOf()
+            override fun moviesFlow(): Flow<List<Movie>> {
+                return flow {
+                    emit(listOf())
                 }
             }
-            override suspend fun loadMovieDetails(movieId: Int): MovieDetails {
-                return withContext(Dispatchers.Main) {
-                    loadMovieDetails++
-                    MovieDetails(
-                        id = 0,
-                        title = "",
-                        overview = null,
-                        minimumAge = 0,
-                        genres = listOf(),
-                        backdrop = null,
-                        voteAverage = 0.0,
-                        voteCount = 0,
-                        actors = listOf()
-                    )
+
+            override fun detailsFlow(movieId: Int): Flow<MovieDetails> {
+                return flow {}
+            }
+
+            override suspend fun refreshMovies() {
+                withContext(Dispatchers.Main) {
+                    refreshMoviesCounter++
+                }
+            }
+
+            override suspend fun refreshMovieDetails(movieId: Int) {
+                withContext(Dispatchers.Main) {
+                    refreshMovieDetailsCounter++
                 }
             }
         }
@@ -47,7 +48,7 @@ class MoviesListViewModelTest {
         assertEquals("movies", listOf<Movie>(), movies)
 
         //check counters
-        assertEquals("loadMoviesCounter", 1, loadMoviesCounter)
-        assertEquals("loadMovieDetails", 0, loadMovieDetails)
+        assertEquals("refreshMoviesCounter", 1, refreshMoviesCounter)
+        assertEquals("refreshMovieDetailsCounter", 0, refreshMovieDetailsCounter)
     }
 }
