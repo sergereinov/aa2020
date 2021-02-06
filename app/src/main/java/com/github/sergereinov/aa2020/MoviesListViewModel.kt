@@ -1,9 +1,6 @@
 package com.github.sergereinov.aa2020
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.github.sergereinov.aa2020.domain.IMoviesInteractor
 import com.github.sergereinov.aa2020.domain.Movie
 import kotlinx.coroutines.*
@@ -19,14 +16,20 @@ class MoviesListViewModel(
         _errorLoadingMovies.value = null
     }
 
-    private val _movies = MutableLiveData<List<Movie>>()
+    private val _movies = moviesInteractor
+        .moviesFlow()
+        .asLiveData(
+            // Use Dispatchers.IO for DB work and
+            // viewModelScope for auto cancellation
+            Dispatchers.IO + viewModelScope.coroutineContext
+        )
+
     val movies: LiveData<List<Movie>> get() = _movies
 
     init {
         viewModelScope.launch {
             try {
-                _movies.value = moviesInteractor.getCachedMovies()
-                _movies.value = moviesInteractor.loadMovies()
+                moviesInteractor.refreshMovies()
             } catch (e: Exception) {
                 _errorLoadingMovies.value = e.localizedMessage ?: e.message ?: e.toString()
             }
