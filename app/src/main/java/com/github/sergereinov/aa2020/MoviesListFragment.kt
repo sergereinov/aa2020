@@ -9,16 +9,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
-import com.github.sergereinov.aa2020.domain.MoviesInteractor
 
 class MoviesListFragment : Fragment() {
 
     private val viewModel: MoviesListViewModel by viewModels {
         MoviesListViewModelFactory(
-            MoviesInteractor(
-                (requireActivity().application as MoviesApplication).networkModule,
-                (requireActivity().application as MoviesApplication).database
-            )
+            (requireActivity().application as MoviesApplication).createMoviesInteractor()
         )
     }
     private var listener: FragmentClicks? = null
