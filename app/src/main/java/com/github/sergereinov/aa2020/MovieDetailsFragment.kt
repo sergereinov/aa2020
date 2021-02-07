@@ -15,13 +15,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.github.sergereinov.aa2020.domain.InteractorsProvider
 
 class MovieDetailsFragment : Fragment() {
 
     private val viewModel: MovieDetailsViewModel by viewModels {
         MovieDetailsViewModelFactory(
             arguments?.getInt(PARAM_MOVIE_ID, 0) ?: 0,
-            (requireActivity().application as MoviesApplication).createMoviesInteractor()
+            (requireActivity().application as InteractorsProvider).createMoviesInteractor()
         )
     }
     private var listener: FragmentClicks? = null
