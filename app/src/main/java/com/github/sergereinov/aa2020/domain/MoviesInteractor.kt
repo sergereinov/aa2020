@@ -3,6 +3,8 @@ package com.github.sergereinov.aa2020.domain
 import com.github.sergereinov.aa2020.database.*
 import com.github.sergereinov.aa2020.network.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class MoviesInteractor(
@@ -12,18 +14,13 @@ class MoviesInteractor(
 
     private val movieDao = database.movieDao
 
-    override suspend fun getCachedMovies(): List<Movie> = withContext(Dispatchers.IO) {
-        val dbMovies = movieDao.getMoviesWithGenres()
-        dbMovies.toDomainMovies()
-    }
+    override fun moviesFlow(): Flow<List<Movie>> =
+        movieDao.getMoviesWithGenresFlow().map { it.toDomainMovies() }
 
-    override suspend fun getCachedDetails(movieId: Int): MovieDetails =
-        withContext(Dispatchers.IO) {
-            val dbMovie = movieDao.getMovieWithGenresAndActors(movieId.toLong())
-            dbMovie.toDomainMovieDetails()
-        }
+    override fun detailsFlow(movieId: Int): Flow<MovieDetails> =
+        movieDao.getMovieWithGenresAndActorsFlow(movieId.toLong()).map { it.toDomainMovieDetails() }
 
-    override suspend fun loadMovies(): List<Movie> {
+    override suspend fun refreshMovies() {
         val netGenres = networkInteractor.loadGenres()
         val netMovies = networkInteractor.loadPopularMovies()
 
@@ -32,11 +29,9 @@ class MoviesInteractor(
         withContext(Dispatchers.IO) {
             movieDao.replaceMoviesAndGenres(dbMoviesAndGenres.movies, dbMoviesAndGenres.genres)
         }
-
-        return getCachedMovies()
     }
 
-    override suspend fun loadMovieDetails(movieId: Int): MovieDetails {
+    override suspend fun refreshMovieDetails(movieId: Int) {
         val netDetails = networkInteractor.loadMovieDetails(movieId)
         val netCredits = networkInteractor.loadMovieCredits(movieId)
 
@@ -48,8 +43,6 @@ class MoviesInteractor(
                 dbPartialAndActors.actors
             )
         }
-
-        return getCachedDetails(movieId)
     }
 
     // *** helpers ******************************************************

@@ -4,10 +4,10 @@
 [Related links](#related-links)
 <br>
 
-## Homework #8: Persistency
- - Room
+## Homework #9: Working from background
+ - WorkManager
  
- ![hw8_list](/doc/aa2020_hw8_list.jpg) ![hw8_details](/doc/aa2020_hw8_details.jpg)
+ ![hw9_list](/doc/aa2020_hw9_list.jpg) ![hw9_details](/doc/aa2020_hw9_details.jpg)
 
 <br>
 
@@ -33,6 +33,9 @@ Homework #6: UI architectures
 
 Homework #7: Network
 * Retrofit, OkHttp https://github.com/sergereinov/aa2020/tree/7-homework
+
+Homework #8: Persistency
+* Room https://github.com/sergereinov/aa2020/tree/8-homework
 
 <br>
 
