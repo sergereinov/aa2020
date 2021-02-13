@@ -4,6 +4,7 @@ import com.github.sergereinov.aa2020.database.*
 import com.github.sergereinov.aa2020.network.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
@@ -18,7 +19,8 @@ class MoviesInteractor(
         movieDao.getMoviesWithGenresFlow().map { it.toDomainMovies() }
 
     override fun detailsFlow(movieId: Int): Flow<MovieDetails> =
-        movieDao.getMovieWithGenresAndActorsFlow(movieId.toLong()).map { it.toDomainMovieDetails() }
+        movieDao.getMovieWithGenresAndActorsFlow(movieId.toLong()).filter { it != null }
+            .map { it!!.toDomainMovieDetails() }
 
     override suspend fun refreshMovies() {
         val netGenres = networkInteractor.loadGenres()

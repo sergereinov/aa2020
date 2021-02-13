@@ -43,6 +43,6 @@ interface MovieDao {
 
     @Transaction
     @Query("SELECT * FROM movie WHERE id=:movieId")
-    fun getMovieWithGenresAndActorsFlow(movieId: Long): Flow<MovieWithGenresAndActors>
+    fun getMovieWithGenresAndActorsFlow(movieId: Long): Flow<MovieWithGenresAndActors?>
 
 }

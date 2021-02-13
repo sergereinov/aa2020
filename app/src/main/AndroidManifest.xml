@@ -13,11 +13,30 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTop">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <!--
+                    Accepts URIs with pattern
+                    "com.github.sergereinov.aa2020://aa2020.local/movie/{movieId}"
+                    It navigates directly to the movie details screen.
+                -->
+                <data
+                    android:host="aa2020.local"
+                    android:pathPattern="/movie/.*"
+                    android:scheme="${applicationId}" />
             </intent-filter>
         </activity>
         <provider
