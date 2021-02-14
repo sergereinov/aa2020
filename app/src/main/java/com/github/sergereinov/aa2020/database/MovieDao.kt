@@ -8,6 +8,9 @@ interface MovieDao {
     @Insert
     fun insertMovies(movies: List<MovieEntity>)
 
+    @Query("SELECT * FROM movie")
+    fun getMovies(): List<MovieEntity>
+
     @Insert
     fun insertGenres(genres: List<GenreEntity>)
 
@@ -44,5 +47,4 @@ interface MovieDao {
     @Transaction
     @Query("SELECT * FROM movie WHERE id=:movieId")
     fun getMovieWithGenresAndActorsFlow(movieId: Long): Flow<MovieWithGenresAndActors?>
-
 }

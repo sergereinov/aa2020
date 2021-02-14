@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.FragmentManager
+import com.github.sergereinov.aa2020.domain.InteractorsProvider
 
 class MainActivity : AppCompatActivity(), MovieDetailsFragment.FragmentClicks,
     MoviesListFragment.FragmentClicks {
@@ -39,6 +40,8 @@ class MainActivity : AppCompatActivity(), MovieDetailsFragment.FragmentClicks,
         if (intent.action == Intent.ACTION_VIEW) {
             val id = intent.data?.lastPathSegment?.toIntOrNull()
             if (id != null) {
+                (application as InteractorsProvider).getNotificationsInteractor()
+                    .dismissNotification(id.toLong())
                 showMovieDetailsFragment(id)
             }
         }

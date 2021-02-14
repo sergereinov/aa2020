@@ -11,6 +11,7 @@ import kotlinx.coroutines.withContext
 class MoviesInteractor(
     private val networkInteractor: INetworkInteractor,
     database: MovieDatabase,
+    private val notifications: Notifications
 ) : IMoviesInteractor {
 
     private val movieDao = database.movieDao
@@ -24,12 +25,26 @@ class MoviesInteractor(
 
     override suspend fun refreshMovies() {
         val netGenres = networkInteractor.loadGenres()
+        /*
+            Switch from one to another to test/debug for the New Film notification bubble
+            val netMovies = networkInteractor.loadPopularMovies()
+            val netMovies = networkInteractor.loadTopRatedMovies()
+         */
         val netMovies = networkInteractor.loadPopularMovies()
 
         val dbMoviesAndGenres = buildDatabaseMoviesAndGenres(netMovies, netGenres)
 
-        withContext(Dispatchers.IO) {
+        val oldDbMovies = withContext(Dispatchers.IO) {
+            val oldMovies = movieDao.getMovies()
             movieDao.replaceMoviesAndGenres(dbMoviesAndGenres.movies, dbMoviesAndGenres.genres)
+            oldMovies
+        }
+
+        val newMaxVotedMovie = dbMoviesAndGenres.movies
+            .filter { m -> oldDbMovies.none { old -> old.id == m.id } }
+            .maxByOrNull { m -> m.voteAverage }
+        newMaxVotedMovie?.let { movie ->
+            notifications.showNotification(movie)
         }
     }
 
