@@ -24,6 +24,10 @@ class NetworkModule(context: Context) : INetworkInteractor {
         retrofitModule.moviesApi.getPopular()
     }
 
+    override suspend fun loadTopRatedMovies() = withContext(Dispatchers.IO) {
+        retrofitModule.moviesApi.getTopRated()
+    }
+
     override suspend fun loadMovieDetails(movieId: Int) = withContext(Dispatchers.IO) {
         retrofitModule.moviesApi.getDetails(movieId)
     }
@@ -38,6 +42,9 @@ class NetworkModule(context: Context) : INetworkInteractor {
 
         @GET("movie/popular?api_key=${Server.apiKey}")
         suspend fun getPopular(): NetworkMovies
+
+        @GET("movie/top_rated?api_key=${Server.apiKey}")
+        suspend fun getTopRated(): NetworkMovies
 
         @GET("movie/{movie_id}?api_key=${Server.apiKey}")
         suspend fun getDetails(@Path("movie_id") movieId: Int): NetworkMovieDetails

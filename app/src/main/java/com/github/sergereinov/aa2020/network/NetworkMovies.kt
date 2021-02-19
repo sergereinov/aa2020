@@ -4,8 +4,12 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /*
-    Query: GET /movie/popular
-    Schema: https://developers.themoviedb.org/3/movies/get-popular-movies
+    Queries:
+        GET /movie/popular
+        GET /movie/top_rated
+    Schemas:
+        https://developers.themoviedb.org/3/movies/get-popular-movies
+        https://developers.themoviedb.org/3/movies/get-top-rated-movies
     data class NetworkMovies
  */
 
