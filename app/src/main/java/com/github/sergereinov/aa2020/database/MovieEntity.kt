@@ -32,3 +32,33 @@ data class MoviePartialEntity(
     @ColumnInfo(name = "backdrop_url")
     val backdrop: String?,
 )
+
+@Entity(
+    tableName = "movie_genre_cross_ref",
+    primaryKeys = ["movie_id", "genre_id"],
+    indices = [
+        Index(value = ["movie_id"]),
+        Index(value = ["genre_id"])
+    ]
+)
+data class MovieGenreCrossRef(
+    @ColumnInfo(name = "movie_id")
+    val movieId: Long,
+    @ColumnInfo(name = "genre_id")
+    val genreId: Long
+)
+
+@Entity(
+    tableName = "movie_actor_cross_ref",
+    primaryKeys = ["movie_id", "actor_id"],
+    indices = [
+        Index(value = ["movie_id"]),
+        Index(value = ["actor_id"])
+    ]
+)
+data class MovieActorCrossRef(
+    @ColumnInfo(name = "movie_id")
+    val movieId: Long,
+    @ColumnInfo(name = "actor_id")
+    val actorId: Long
+)

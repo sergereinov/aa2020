@@ -10,8 +10,10 @@ import androidx.room.RoomDatabase
         MovieEntity::class,
         GenreEntity::class,
         ActorEntity::class,
+        MovieGenreCrossRef::class,
+        MovieActorCrossRef::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class MovieDatabase : RoomDatabase() {
