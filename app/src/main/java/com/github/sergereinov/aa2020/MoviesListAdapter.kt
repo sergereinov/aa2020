@@ -21,8 +21,8 @@ class MoviesListAdapter(private val onClickCard: (item: Movie, itemView: View) -
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-                LayoutInflater.from(parent.context)
-                        .inflate(R.layout.view_holder_movie, parent, false)
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.view_holder_movie, parent, false)
         )
     }
 
@@ -36,14 +36,15 @@ class MoviesListAdapter(private val onClickCard: (item: Movie, itemView: View) -
         private val filmCard: View = itemView.findViewById(R.id.film_card)
         private val movieImage: ImageView = itemView.findViewById(R.id.movie_image)
         private val pgText: TextView = itemView.findViewById(R.id.pg)
+
         //private val likeImage: ImageView = itemView.findViewById(R.id.like_image)
         private val tagText: TextView = itemView.findViewById(R.id.tag_text)
         private val starsImages: List<ImageView> = listOf(
-                itemView.findViewById(R.id.star1_image),
-                itemView.findViewById(R.id.star2_image),
-                itemView.findViewById(R.id.star3_image),
-                itemView.findViewById(R.id.star4_image),
-                itemView.findViewById(R.id.star5_image)
+            itemView.findViewById(R.id.star1_image),
+            itemView.findViewById(R.id.star2_image),
+            itemView.findViewById(R.id.star3_image),
+            itemView.findViewById(R.id.star4_image),
+            itemView.findViewById(R.id.star5_image)
         )
         private val reviewsText: TextView = itemView.findViewById(R.id.reviews_text)
         private val titleText: TextView = itemView.findViewById(R.id.title_text)
@@ -87,9 +88,11 @@ class MoviesListAdapter(private val onClickCard: (item: Movie, itemView: View) -
             val starsCount = kotlin.math.floor(item.voteAverage / 2).toInt()
             starsImages.forEachIndexed { index, imageView ->
                 val colorId = if (starsCount > index) R.color.red_star else R.color.blank_star
-                ImageViewCompat.setImageTintList(imageView, ColorStateList.valueOf(
+                ImageViewCompat.setImageTintList(
+                    imageView, ColorStateList.valueOf(
                         ContextCompat.getColor(imageView.context, colorId)
-                ))
+                    )
+                )
             }
 
             filmCard.setOnClickListener {

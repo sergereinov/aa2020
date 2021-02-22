@@ -20,7 +20,9 @@ class MoviesInteractor(
         movieDao.getMoviesWithGenresFlow().map { it.toDomainMovies() }
 
     override fun detailsFlow(movieId: Int): Flow<MovieDetails> =
-        movieDao.getMovieWithGenresAndActorsFlow(movieId.toLong()).filter { it != null }
+        movieDao
+            .getMovieWithGenresAndActorsFlow(movieId.toLong())
+            .filter { it != null }
             .map { it!!.toDomainMovieDetails() }
 
     override suspend fun refreshMovies() {
