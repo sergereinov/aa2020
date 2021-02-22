@@ -8,36 +8,62 @@ interface MovieDao {
     @Insert
     fun insertMovies(movies: List<MovieEntity>)
 
-    @Query("SELECT * FROM movie")
-    fun getMovies(): List<MovieEntity>
+    @Query("DELETE FROM movie")
+    fun deleteMovies()
 
     @Insert
     fun insertGenres(genres: List<GenreEntity>)
 
-    @Insert
+    @Query("DELETE FROM genre")
+    fun deleteGenres()
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertActors(actors: List<ActorEntity>)
 
-    @Query("DELETE FROM actor WHERE movie_id=:movieId")
-    fun deleteActorsByMovie(movieId: Long)
+    @Query("DELETE FROM actor")
+    fun deleteActors()
+
+    @Insert
+    fun insertMovieGenreCrossRefs(mgCrossRefs: List<MovieGenreCrossRef>)
+
+    @Query("DELETE FROM movie_genre_cross_ref")
+    fun deleteMovieGenreCrossRefs()
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertMovieActorCrossRefs(maCrossRefs: List<MovieActorCrossRef>)
+
+    @Query("DELETE FROM movie_actor_cross_ref")
+    fun deleteMovieActorCrossRefs()
+
+    @Transaction
+    fun replaceMoviesAndGenres(
+        movies: List<MovieEntity>,
+        genres: List<GenreEntity>,
+        mgCrossRefs: List<MovieGenreCrossRef>
+    ) {
+        deleteActors()
+        deleteGenres()
+        deleteMovieActorCrossRefs()
+        deleteMovieGenreCrossRefs()
+        deleteMovies()
+
+        insertGenres(genres)
+        insertMovies(movies)
+        insertMovieGenreCrossRefs(mgCrossRefs)
+    }
 
     @Update(entity = MovieEntity::class)
     fun updateMovieWithPartial(partial: MoviePartialEntity)
 
-    @Query("DELETE FROM movie")
-    fun deleteAll()
-
     @Transaction
-    fun replaceMoviesAndGenres(movies: List<MovieEntity>, genres: List<GenreEntity>) {
-        deleteAll()
-        insertMovies(movies)
-        insertGenres(genres)
-    }
-
-    @Transaction
-    fun updateMovieDetailsAndActors(partial: MoviePartialEntity, movieActors: List<ActorEntity>) {
+    fun updateMovieDetailsAndActors(
+        partial: MoviePartialEntity,
+        movieActors: List<ActorEntity>,
+        maCrossRefs: List<MovieActorCrossRef>
+    ) {
         updateMovieWithPartial(partial)
-        deleteActorsByMovie(partial.movieId)
         insertActors(movieActors)
+        insertMovieActorCrossRefs(maCrossRefs)
     }
 
     @Transaction
