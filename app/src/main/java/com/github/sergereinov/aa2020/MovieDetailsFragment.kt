@@ -10,22 +10,22 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.github.sergereinov.aa2020.domain.MoviesInteractor
+import com.bumptech.glide.request.RequestOptions
+import com.github.sergereinov.aa2020.domain.InteractorsProvider
+import com.google.android.material.transition.MaterialContainerTransform
 
 class MovieDetailsFragment : Fragment() {
 
     private val viewModel: MovieDetailsViewModel by viewModels {
         MovieDetailsViewModelFactory(
             arguments?.getInt(PARAM_MOVIE_ID, 0) ?: 0,
-            MoviesInteractor(
-                (requireActivity().application as MoviesApplication).networkModule,
-                (requireActivity().application as MoviesApplication).database
-            )
+            (requireActivity().application as InteractorsProvider).createMoviesInteractor()
         )
     }
     private var listener: FragmentClicks? = null
@@ -38,6 +38,8 @@ class MovieDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        ViewCompat.setTransitionName(view, getString(R.string.details_fragment_transition_name))
 
         view.findViewById<TextView>(R.id.back)?.setOnClickListener {
             listener?.backFromMovieDetails()
@@ -69,6 +71,7 @@ class MovieDetailsFragment : Fragment() {
 
                 Glide.with(requireContext())
                     .load(movie.backdrop)
+                    .apply(RequestOptions().dontTransform())
                     .placeholder(R.mipmap.ic_banner_loading)
                     .error(R.drawable.ic_no_image)
                     .fitCenter()
@@ -128,12 +131,15 @@ class MovieDetailsFragment : Fragment() {
 
     companion object {
         private const val PARAM_MOVIE_ID = "movie_id"
+        const val MOTION_DURATION = 1200L
 
         fun newInstance(movieId: Int) = MovieDetailsFragment().also {
             val args = Bundle()
             args.putInt(PARAM_MOVIE_ID, movieId)
             it.arguments = args
+            it.sharedElementEnterTransition = MaterialContainerTransform().apply {
+                duration = MOTION_DURATION
+            }
         }
     }
-
 }

@@ -4,10 +4,10 @@
 [Related links](#related-links)
 <br>
 
-## Homework #8: Persistency
- - Room
+## Homework #11: Animations
+ - MaterialContainerTransform, MaterialElevationScale
  
- ![hw8_list](/doc/aa2020_hw8_list.jpg) ![hw8_details](/doc/aa2020_hw8_details.jpg)
+ ![hw11_gif](/doc/aa2020_hw11_transitions.gif)
 
 <br>
 
@@ -33,6 +33,15 @@ Homework #6: UI architectures
 
 Homework #7: Network
 * Retrofit, OkHttp https://github.com/sergereinov/aa2020/tree/7-homework
+
+Homework #8: Persistency
+* Room https://github.com/sergereinov/aa2020/tree/8-homework
+
+Homework #9: Working from background
+* WorkManager https://github.com/sergereinov/aa2020/tree/9-homework
+
+Homework #10: Missing Parts
+* Deep links, Notifications https://github.com/sergereinov/aa2020/tree/10-homework
 
 <br>
 

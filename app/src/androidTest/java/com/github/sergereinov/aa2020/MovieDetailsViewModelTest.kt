@@ -4,6 +4,8 @@ import com.github.sergereinov.aa2020.domain.IMoviesInteractor
 import com.github.sergereinov.aa2020.domain.Movie
 import com.github.sergereinov.aa2020.domain.MovieDetails
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.junit.Assert.*
@@ -14,8 +16,8 @@ class MovieDetailsViewModelTest {
     @Test
     fun testMoviesInteractorCalls() {
 
-        var loadMoviesCounter: Int = 0
-        var loadMovieDetails: Int = 0
+        var refreshMoviesCounter: Int = 0
+        var refreshMovieDetailsCounter: Int = 0
 
         val movie1 = MovieDetails(
             id = 1,
@@ -30,16 +32,25 @@ class MovieDetailsViewModelTest {
         )
 
         val mi = object : IMoviesInteractor {
-            override suspend fun loadMovies(): List<Movie> {
-                return withContext(Dispatchers.Main) {
-                    loadMoviesCounter++
-                    listOf()
+            override fun moviesFlow(): Flow<List<Movie>> {
+                return flow {}
+            }
+
+            override fun detailsFlow(movieId: Int): Flow<MovieDetails> {
+                return flow {
+                    emit(movie1)
                 }
             }
-            override suspend fun loadMovieDetails(movieId: Int): MovieDetails {
-                return withContext(Dispatchers.Main) {
-                    loadMovieDetails++
-                    movie1
+
+            override suspend fun refreshMovies() {
+                withContext(Dispatchers.Main) {
+                    refreshMoviesCounter++
+                }
+            }
+
+            override suspend fun refreshMovieDetails(movieId: Int) {
+                withContext(Dispatchers.Main) {
+                    refreshMovieDetailsCounter++
                 }
             }
         }
@@ -53,7 +64,7 @@ class MovieDetailsViewModelTest {
         assertEquals("selectedMovie", movie1, selectedMovie)
 
         //check counters
-        assertEquals("loadMoviesCounter", 0, loadMoviesCounter)
-        assertEquals("loadMovieDetails", 1, loadMovieDetails)
+        assertEquals("refreshMoviesCounter", 0, refreshMoviesCounter)
+        assertEquals("refreshMovieDetailsCounter", 1, refreshMovieDetailsCounter)
     }
 }

@@ -1,6 +1,7 @@
 package com.github.sergereinov.aa2020.database
 
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MovieDao {
@@ -67,9 +68,9 @@ interface MovieDao {
 
     @Transaction
     @Query("SELECT * FROM movie")
-    fun getMoviesWithGenres(): List<MovieWithGenres>
+    fun getMoviesWithGenresFlow(): Flow<List<MovieWithGenres>>
 
     @Transaction
     @Query("SELECT * FROM movie WHERE id=:movieId")
-    fun getMovieWithGenresAndActors(movieId: Long): MovieWithGenresAndActors
+    fun getMovieWithGenresAndActorsFlow(movieId: Long): Flow<MovieWithGenresAndActors?>
 }

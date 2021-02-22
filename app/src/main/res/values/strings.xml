@@ -20,4 +20,9 @@
     <string name="reviews_text">%d Reviews</string>
     <string name="movie_len_text">%d MIN</string>
     <string name="error_loading_movies">Error loading movies: %s</string>
+    <string name="channel_new_movie">New movie</string>
+    <string name="channel_new_movie_description">Notifies about new movies</string>
+    <string name="there_is_a_new_movie">There is a new movie!</string>
+    <string name="movie_item_transition_name">movie_%d</string>
+    <string name="details_fragment_transition_name">details</string>
 </resources>

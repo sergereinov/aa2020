@@ -1,8 +1,10 @@
 package com.github.sergereinov.aa2020.domain
 
+import kotlinx.coroutines.flow.Flow
+
 interface IMoviesInteractor {
-    suspend fun getCachedMovies(): List<Movie>
-    suspend fun getCachedDetails(movieId: Int): MovieDetails
-    suspend fun loadMovies(): List<Movie>
-    suspend fun loadMovieDetails(movieId: Int): MovieDetails
+    fun moviesFlow(): Flow<List<Movie>>
+    fun detailsFlow(movieId: Int): Flow<MovieDetails>
+    suspend fun refreshMovies()
+    suspend fun refreshMovieDetails(movieId: Int)
 }
