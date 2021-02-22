@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.github.sergereinov.aa2020.domain.InteractorsProvider
+import com.google.android.material.transition.MaterialElevationScale
 
 class MoviesListFragment : Fragment() {
 
@@ -29,8 +31,18 @@ class MoviesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = MoviesListAdapter { movie ->
-            listener?.filmCard(movie.id)
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
+
+        exitTransition = MaterialElevationScale(false).apply {
+            duration = MovieDetailsFragment.MOTION_DURATION
+        }
+        reenterTransition = MaterialElevationScale(true).apply {
+            duration = MovieDetailsFragment.MOTION_DURATION
+        }
+
+        val adapter = MoviesListAdapter { movie, itemView ->
+            listener?.filmCard(movie.id, itemView)
         }
         val recyclerView = view.findViewById<RecyclerView>(R.id.movies_list)
         recyclerView.adapter = adapter
@@ -62,6 +74,6 @@ class MoviesListFragment : Fragment() {
     }
 
     interface FragmentClicks {
-        fun filmCard(movieId: Int)
+        fun filmCard(movieId: Int, itemView: View)
     }
 }

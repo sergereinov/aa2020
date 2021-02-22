@@ -3,6 +3,7 @@ package com.github.sergereinov.aa2020
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.FragmentManager
 import com.github.sergereinov.aa2020.domain.InteractorsProvider
 
@@ -47,14 +48,18 @@ class MainActivity : AppCompatActivity(), MovieDetailsFragment.FragmentClicks,
         }
     }
 
-    private fun showMovieDetailsFragment(movieId: Int) {
+    private fun showMovieDetailsFragment(movieId: Int, itemView: View? = null) {
         supportFragmentManager.popBackStack(
             DETAILS_FRAGMENT_TAG,
             FragmentManager.POP_BACK_STACK_INCLUSIVE
         )
         supportFragmentManager.beginTransaction()
             .apply {
-                add(R.id.fragments_container, MovieDetailsFragment.newInstance(movieId))
+                itemView?.let { sourceView ->
+                    setReorderingAllowed(true)
+                    addSharedElement(sourceView, getString(R.string.details_fragment_transition_name))
+                }
+                replace(R.id.fragments_container, MovieDetailsFragment.newInstance(movieId))
                 addToBackStack(DETAILS_FRAGMENT_TAG)
                 commit()
             }
@@ -66,8 +71,8 @@ class MainActivity : AppCompatActivity(), MovieDetailsFragment.FragmentClicks,
         }
     }
 
-    override fun filmCard(movieId: Int) {
-        showMovieDetailsFragment(movieId)
+    override fun filmCard(movieId: Int, itemView: View) {
+        showMovieDetailsFragment(movieId, itemView)
     }
 
 }
