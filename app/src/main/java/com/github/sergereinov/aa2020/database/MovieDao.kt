@@ -11,6 +11,9 @@ interface MovieDao {
     @Query("DELETE FROM movie")
     fun deleteMovies()
 
+    @Query("SELECT * FROM movie")
+    fun getMovies(): List<MovieEntity>
+
     @Insert
     fun insertGenres(genres: List<GenreEntity>)
 

@@ -17,9 +17,7 @@ class MoviesInteractor(
     private val movieDao = database.movieDao
 
     override fun moviesFlow(): Flow<List<Movie>> =
-        movieDao.
-  
-  WithGenresFlow().map { it.toDomainMovies() }
+        movieDao.getMoviesWithGenresFlow().map { it.toDomainMovies() }
 
     override fun detailsFlow(movieId: Int): Flow<MovieDetails> =
         movieDao
@@ -36,17 +34,22 @@ class MoviesInteractor(
          */
         val netMovies = networkInteractor.loadPopularMovies()
 
-        withContext(Dispatchers.IO) {
+        val newMaxVotedMovie = withContext(Dispatchers.IO) {
+
+            val oldMovies = movieDao.getMovies()
+
             movieDao.replaceMoviesAndGenres(
                 netMovies.toDomainMovies(),
                 netGenres.toDomainGenres(),
                 netMovies.toDomainMovieGenreCrossRefs()
             )
+
+            movieDao
+                .getMovies()
+                .filter { m -> oldMovies.none { old -> old.id == m.id } }
+                .maxByOrNull { m -> m.voteAverage }
         }
 
-        val newMaxVotedMovie = dbMoviesAndGenres.movies
-            .filter { m -> oldDbMovies.none { old -> old.id == m.id } }
-            .maxByOrNull { m -> m.voteAverage }
         newMaxVotedMovie?.let { movie ->
             notifications.showNotification(movie)
         }
