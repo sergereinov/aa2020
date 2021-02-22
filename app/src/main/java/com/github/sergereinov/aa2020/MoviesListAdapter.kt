@@ -7,20 +7,22 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.core.widget.ImageViewCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.github.sergereinov.aa2020.domain.Movie
 
-class MoviesListAdapter(private val onClickCard: (item: Movie) -> Unit)
-    : ListAdapter<Movie, MoviesListAdapter.ViewHolder>(DiffCallback()) {
+class MoviesListAdapter(private val onClickCard: (item: Movie, itemView: View) -> Unit) :
+    ListAdapter<Movie, MoviesListAdapter.ViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-                LayoutInflater.from(parent.context)
-                        .inflate(R.layout.view_holder_movie, parent, false)
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.view_holder_movie, parent, false)
         )
     }
 
@@ -34,24 +36,31 @@ class MoviesListAdapter(private val onClickCard: (item: Movie) -> Unit)
         private val filmCard: View = itemView.findViewById(R.id.film_card)
         private val movieImage: ImageView = itemView.findViewById(R.id.movie_image)
         private val pgText: TextView = itemView.findViewById(R.id.pg)
+
         //private val likeImage: ImageView = itemView.findViewById(R.id.like_image)
         private val tagText: TextView = itemView.findViewById(R.id.tag_text)
         private val starsImages: List<ImageView> = listOf(
-                itemView.findViewById(R.id.star1_image),
-                itemView.findViewById(R.id.star2_image),
-                itemView.findViewById(R.id.star3_image),
-                itemView.findViewById(R.id.star4_image),
-                itemView.findViewById(R.id.star5_image)
+            itemView.findViewById(R.id.star1_image),
+            itemView.findViewById(R.id.star2_image),
+            itemView.findViewById(R.id.star3_image),
+            itemView.findViewById(R.id.star4_image),
+            itemView.findViewById(R.id.star5_image)
         )
         private val reviewsText: TextView = itemView.findViewById(R.id.reviews_text)
         private val titleText: TextView = itemView.findViewById(R.id.title_text)
         private val movieLenText: TextView = itemView.findViewById(R.id.movie_len)
 
-        fun bind(item: Movie, onClickCard: (item: Movie) -> Unit) {
+        fun bind(item: Movie, onClickCard: (item: Movie, itemView: View) -> Unit) {
             val context = itemView.context
+
+            ViewCompat.setTransitionName(
+                itemView,
+                context.getString(R.string.movie_item_transition_name, item.id)
+            )
 
             Glide.with(context)
                 .load(item.poster)
+                .apply(RequestOptions().dontTransform())
                 .placeholder(R.mipmap.ic_banner_loading)
                 .error(R.drawable.ic_no_image)
                 .fitCenter()
@@ -79,13 +88,15 @@ class MoviesListAdapter(private val onClickCard: (item: Movie) -> Unit)
             val starsCount = kotlin.math.floor(item.voteAverage / 2).toInt()
             starsImages.forEachIndexed { index, imageView ->
                 val colorId = if (starsCount > index) R.color.red_star else R.color.blank_star
-                ImageViewCompat.setImageTintList(imageView, ColorStateList.valueOf(
+                ImageViewCompat.setImageTintList(
+                    imageView, ColorStateList.valueOf(
                         ContextCompat.getColor(imageView.context, colorId)
-                ))
+                    )
+                )
             }
 
             filmCard.setOnClickListener {
-                onClickCard(item)
+                onClickCard(item, itemView)
             }
         }
     }

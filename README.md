@@ -4,10 +4,10 @@
 [Related links](#related-links)
 <br>
 
-## Homework #10: Missing Parts
- - Deep links, Notifications
+## Homework #11: Animations
+ - MaterialContainerTransform, MaterialElevationScale
  
- ![hw10_notification](/doc/aa2020_hw10_notification.jpg) ![hw10_deeplink](/doc/aa2020_hw10_deeplink.jpg)
+ ![hw11_gif](/doc/aa2020_hw11_transitions.gif)
 
 <br>
 
@@ -39,6 +39,9 @@ Homework #8: Persistency
 
 Homework #9: Working from background
 * WorkManager https://github.com/sergereinov/aa2020/tree/9-homework
+
+Homework #10: Missing Parts
+* Deep links, Notifications https://github.com/sergereinov/aa2020/tree/10-homework
 
 <br>
 
